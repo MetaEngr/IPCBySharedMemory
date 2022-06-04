@@ -2,37 +2,17 @@
 
 #include <queue>
 #include <string>
+#include <mutex>
 
 namespace ipc
 {
 class MsgBuffer
 {
 public:
-    MsgBuffer(int id, const char* buf, int size)
-    {
-        id_ = id;
-        if (size <= 0)
-        {
-            assert(false || "msg buf is empty!");
-            msg_ = nullptr;
-        }
-        else
-        {
-            msg_ = new std::string(buf, size);
-        }
-    }
+    explicit MsgBuffer(int id, const char* buf, int size);
+    ~MsgBuffer();
 
-    ~MsgBuffer()
-    {
-        if (nullptr != msg_)
-        {
-            delete msg_;
-            msg_ = nullptr;
-        }
-        id_ = -1;
-    }
-
-    bool GetMsg(int& id, std::string &msg) const
+    inline bool GetMsg(int& id, std::string &msg) const
     {
         id = id_;
         msg = *msg_;
@@ -47,41 +27,18 @@ private:
 class ShmMsgDataBuffer
 {
 public:
-    ShmMsgDataBuffer() {}
-    ~ShmMsgDataBuffer()
-    {
-        while (!msgQueue_.empty())
-        {
-            MsgBuffer* buf = msgQueue_.front();
-            msgQueue_.pop();
-            delete buf;
-        }
-    }
+    ShmMsgDataBuffer();
+    ~ShmMsgDataBuffer();
 
-    inline bool IsEmpty(void) const { return msgQueue_.empty(); }
-    inline size_t Size(void) const { return msgQueue_.size(); }
-    inline void Push(int id, const char* buf, int size) {
-        return msgQueue_.push(new MsgBuffer(id, buf, size));
-    }
-    void Pop(void)
-    {
-        MsgBuffer* buf = msgQueue_.front();
-        msgQueue_.pop();
-        delete buf;
-    }
-    bool GetFront(int& id, std::string &msg)
-    {
-        if (msgQueue_.empty())
-        {
-            return false;
-        }
-        MsgBuffer* buf = msgQueue_.front();
-        buf->GetMsg(id, msg);
-        return true;
-    }
+    bool IsEmpty(void);
+    size_t Size(void);
+    void Push(int id, const char* buf, int size);
+    void Pop(void);
+    bool GetFront(int& id, std::string &msg);
 
 private:
     std::queue<MsgBuffer*> msgQueue_;
+    std::mutex mutex_;
 
 private:
     ShmMsgDataBuffer(const ShmMsgDataBuffer&) = delete;

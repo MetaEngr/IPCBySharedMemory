@@ -37,6 +37,7 @@
     <ClCompile Include="src\sharemem\SharedMemory.cpp" />
     <ClCompile Include="src\ShmIPCClient.cpp" />
     <ClCompile Include="src\ShmIPCServer.cpp" />
+    <ClCompile Include="src\ShmMsgDataBuffer.cpp" />
     <ClCompile Include="src\StringTools.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
