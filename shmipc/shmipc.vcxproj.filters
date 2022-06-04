@@ -24,15 +24,6 @@
     <ClInclude Include="include\ShmIPCServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\handler\ShmIPCReader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\handler\ShmIPCWriter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\handler\ThreadCtrl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\ShmIPCDefine.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -45,17 +36,11 @@
     <ClInclude Include="src\sharemem\SharedMemory.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\handler\ShmIPCRWHandler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\handler\ShmIPCReader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\handler\ShmIPCWriter.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\handler\ThreadCtrl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\ShmIPCClient.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -69,6 +54,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\ShmMsgDataBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\handler\ShmIPCRWHandler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

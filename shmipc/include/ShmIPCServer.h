@@ -16,8 +16,7 @@ class SharedMemory;
 namespace ipc
 {
 class IShmChannelNotify;
-class ShmIPCReader;
-class ShmIPCWriter;
+class ShmIPCRWHandler;
 
 class SHM_IPC_EXPORT ShmIPCServer
 {
@@ -54,8 +53,7 @@ private:
     shm::SharedMemory* shmClientWrite_ = nullptr;  // client->server 方向消息
 
     // 线程
-    ShmIPCWriter* shmServerMsgWriter_ = nullptr;
-    ShmIPCReader* shmClientMsgReader_ = nullptr;
+    ShmIPCRWHandler* shmMsgHandler_ = nullptr;
 
     // 不管理生命周期
     IShmChannelNotify* notify_ = nullptr;

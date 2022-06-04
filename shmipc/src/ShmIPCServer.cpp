@@ -6,8 +6,7 @@
 #include "../include/IShmChannelNotify.h"
 #include "sharemem/SharedMemory.h"
 #include "ShmIPCDefine.h"
-#include "handler/ShmIPCReader.h"
-#include "handler/ShmIPCWriter.h"
+#include "handler/ShmIPCRWHandler.h"
 #include "StringTools.h"
 
 namespace ipc
@@ -31,18 +30,11 @@ void ShmIPCServer::CleanUp(void)
     ReleaseSemaphore(hSemaphoreServerWrite_, 1, NULL);
     ReleaseSemaphore(hSemaphoreServerRead_, 1, NULL);
 
-    if (nullptr != shmServerMsgWriter_)
+    if (nullptr != shmMsgHandler_)
     {
-        shmServerMsgWriter_->Stop();
-        delete shmServerMsgWriter_;
-        shmServerMsgWriter_ = nullptr;
-    }
-
-    if (nullptr != shmClientMsgReader_)
-    {
-        shmClientMsgReader_->Stop();
-        delete shmClientMsgReader_;
-        shmClientMsgReader_ = nullptr;
+        shmMsgHandler_->Stop();
+        delete shmMsgHandler_;
+        shmMsgHandler_ = nullptr;
     }
     if (nullptr != shmServerWrite_)
     {
@@ -168,43 +160,29 @@ int ShmIPCServer::InitSharedMemory(void)
 
 int ShmIPCServer::Start(void)
 {
-    if (nullptr == shmServerMsgWriter_)
+    if (nullptr == shmMsgHandler_)
     {
-        shmServerMsgWriter_ = new ShmIPCWriter;
-        std::string name = "shmServerMsgWriter";
-        shmServerMsgWriter_->SetName(name.c_str(), name.size());
-        shmServerMsgWriter_->SetSemaphore(hSemaphoreServerWrite_, hSemaphoreServerRead_);
-        shmServerMsgWriter_->SetNotify(notify_);
-        shmServerMsgWriter_->AttachShm(shmServerWrite_);
-    }
-    if (nullptr == shmClientMsgReader_)
-    {
-        shmClientMsgReader_ = new ShmIPCReader;
-        std::string name = "shmClientMsgReader";
-        shmClientMsgReader_->SetName(name.c_str(), name.size());
-        shmClientMsgReader_->SetSemaphore(hSemaphoreClientWrite_, hSemaphoreClientRead_);
-        shmClientMsgReader_->SetNotify(notify_);
-        shmClientMsgReader_->AttachShm(shmClientWrite_);
+        shmMsgHandler_ = new ShmIPCRWHandler;
+        shmMsgHandler_->SetSemaphore(hSemaphoreServerWrite_, hSemaphoreServerRead_,
+            hSemaphoreClientWrite_, hSemaphoreClientRead_);
+        shmMsgHandler_->SetNotify(notify_);
+        shmMsgHandler_->AttachShm(shmServerWrite_, shmClientWrite_);
     }
 
-    // 开启读客户端线程
-    shmClientMsgReader_->Start();
-
-    // 开启服务端写线程
-    shmServerMsgWriter_->Start();
+    // 开启读写线程
+    shmMsgHandler_->Start();
 
     return 0;
 }
 
 void ShmIPCServer::Stop(void)
 {
-    shmServerMsgWriter_->Stop();
-    shmClientMsgReader_->Stop();
+    shmMsgHandler_->Stop();
 }
 
 int ShmIPCServer::SendMsg(int id, const char* buf, int size, bool synchronized)
 {
-    return shmServerMsgWriter_->SendMsg(id, buf, size, synchronized);
+    return shmMsgHandler_->SendMsg(id, buf, size, synchronized);
 }
 
 }  // namespace ipc

@@ -22,18 +22,14 @@
     <ClInclude Include="include\IShmChannelNotify.h" />
     <ClInclude Include="include\ShmIPCClient.h" />
     <ClInclude Include="include\ShmIPCServer.h" />
-    <ClInclude Include="src\handler\ShmIPCReader.h" />
-    <ClInclude Include="src\handler\ShmIPCWriter.h" />
-    <ClInclude Include="src\handler\ThreadCtrl.h" />
+    <ClInclude Include="src\handler\ShmIPCRWHandler.h" />
     <ClInclude Include="src\sharemem\SharedMemory.h" />
     <ClInclude Include="src\ShmIPCDefine.h" />
     <ClInclude Include="src\ShmMsgDataBuffer.h" />
     <ClInclude Include="src\StringTools.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\handler\ShmIPCReader.cpp" />
-    <ClCompile Include="src\handler\ShmIPCWriter.cpp" />
-    <ClCompile Include="src\handler\ThreadCtrl.cpp" />
+    <ClCompile Include="src\handler\ShmIPCRWHandler.cpp" />
     <ClCompile Include="src\sharemem\SharedMemory.cpp" />
     <ClCompile Include="src\ShmIPCClient.cpp" />
     <ClCompile Include="src\ShmIPCServer.cpp" />

@@ -28,11 +28,7 @@ int SharedMemory::Open(const char* shmName, unsigned int shmSize)
     {
         ret = CreateSharedMemory(shmName, shmCapacity_);
     }
-    if (0 == ret)
-    {
-        char flag = ShmFlag::Initialized;  // 更新标志
-        memcpy_s(shmAddr_, shmCapacity_, reinterpret_cast<void*>(&flag), sizeof(flag));  // 写1字节标志
-    }
+
     return ret;
 }
 
@@ -72,6 +68,10 @@ int SharedMemory::CreateSharedMemory(const char* shmName, unsigned int shmSize)
     }
 
 #pragma endregion SharedMemory
+
+    // 新创建共享内存时,写初始化标志
+    char flag = ShmFlag::Initialized;  // 更新标志
+    memcpy_s(shmAddr_, shmCapacity_, reinterpret_cast<void*>(&flag), sizeof(flag));  // 写1字节标志
     return 0;
 }
 
